@@ -80,6 +80,39 @@
   </section>
 
     </section>
+      <section title="Background">
+          
+          <t>The transmit timestamp is one of the four timestamps included in every
+              <xref target="RFC5905">NTPv4</xref> packet used for time synchronization.
+              A typical transmit timestamp is captured in a software NTP implementation
+              using the system clock, before the computation of message digest and before
+              the packet is passed to the operating system, and does not include any
+              processing and queuing delays in the system, network drivers, and hardware.
+              The receive timestamp (system time when the query packet was received),
+              on the other hand, is captured before these delays. These delays may thus
+              add a significant error to the offset and network delay measured by clients
+              and peers of the server. Therefore, for best accuracy, the transmit timestamp
+              should be captured at the physical layer of the OSI model, but that is
+              difficult to implement in the current packet. </t>
+          
+          <t>A more accurate transmit timestamp may be available after the
+              transmission, e.g. captured in the network driver or at the MAC/PHY
+              layer. However, the protocol described in RFC 5905 does not allow the
+              server to provide its clients and peers with this timestamp.</t>
+          
+          <t>Different mechanisms could be used to exchange this more accurate timestamp.
+              This document describes interleaved modes, in which an NTP packet contains a
+              transmit timestamp corresponding to the previous packet that was sent
+              to the client or peer. The NTP packet format is not changed. Only the
+              semantics of some timestamp fields is different.</t>
+          
+          <t>The protocol requires both servers and clients/peers to keep some state
+              specific to the interleaved mode. It prevents traffic amplification
+              that would be possible if the timestamp was sent in a separate message
+              in order to keep the servers stateless.</t>
+          
+          
+      </section>
 
     <section title="Client/server mode">
       <t>The interleaved client/server mode is similar to the basic
