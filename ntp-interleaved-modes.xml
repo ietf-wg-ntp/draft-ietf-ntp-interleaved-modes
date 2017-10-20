@@ -42,10 +42,13 @@
     <keyword>interleaved mode</keyword>
 
     <abstract>
-      <t>This document describes special modes of the Network Time Protocol
-        (NTP) which enable NTP servers to provide their clients and peers with
-        accurate transmit timestamps that are available only after transmitting
-        NTP packets.</t>
+        <t>This document extends the specification of Network Time Protocol
+            (NTP) version 4 in <xref target="RFC5905">RFC 5905</xref> with special modes
+            called the NTP interleaved modes. More specifically, this document describes
+            three modes, interleaved client/server, interleaved symmetric and
+            interleaved broadcast. These modes enable NTP servers to provide
+            their clients and peers with more accurate transmit timestamps that are
+            available only after transmitting NTP packets.</t>
     </abstract>
   </front>
 
