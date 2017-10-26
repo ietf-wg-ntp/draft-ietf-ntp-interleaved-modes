@@ -31,6 +31,20 @@
       </address>
     </author>
 
+    <author fullname="Aanchal Malhotra" initials="A." surname="Malhotra">
+        <organization>Boston University</organization>
+        <address>
+            <postal>
+                <street>111 Cummington Mall</street>
+                <city>Boston</city>
+                <region></region>
+                <code>02215</code>
+                <country>USA</country>
+            </postal>
+            <email>aanchal4@bu.edu</email>
+        </address>
+    </author>
+
     <date year="2017" month="October" day="19"/>
 
     <area>General</area>
@@ -43,79 +57,43 @@
 
     <abstract>
         <t>This document extends the specification of Network Time Protocol
-            (NTP) version 4 in <xref target="RFC5905">RFC 5905</xref> with 
-            special modes called the NTP interleaved modes. More specifically, 
-            this document describes three modes, interleaved client/server, 
-            interleaved symmetric and interleaved broadcast. These modes enable 
-            NTP servers to provide their clients and peers with more accurate 
-            transmit timestamps that are available only after transmitting NTP 
-            packets.</t>
+          (NTP) version 4 in <xref target="RFC5905">RFC 5905</xref> with special modes called the NTP interleaved modes, that enable NTP servers to provide their clients and peers with more accurate transmit timestamps that are available only after transmitting NTP packets. More specifically, this document describes three modes, interleaved client/server, interleaved symmetric and interleaved broadcast. </t>
     </abstract>
   </front>
 
   <middle>
-      <section title ="Introduction">
+    <section title="Background">
       <t>RFC 5905 describes the operations of NTPv4 in basic client/server,
-      symmetric and broadcast modes. [A packet that strictly follows RFC 5905,
-      i.e. it contains a transmit timestamp corresponding to the packet itself,
-      is said to be in basic mode.] However, it provides no specification
-      for the interleaved modes that can improve the accuracy of the
-      delivered time. There is a reference NTP implementation for the
-      interleaved symmetric and broadcast modes written by David Mills. This
-      document fulfils this gap and provides a formal specification of
-      NTP interleaved modes. This document introduces and specifies a new
-      interleaved client/server mode. The interleaved symmetric and broadcast
-      modes described here are based on the reference NTP implementation
-      written by David Mills.</t>
-  
-  <t>NTPv4 that supports interleaved modes is compatible with NTPv4 without this
-     capability as well as with all previous NTP versions.</t>
-  
-  <t>This document assumes familiarity with RFC 5905. </t>
-  
-      <section title="Requirements Language">
+        symmetric and broadcast modes. The transmit timestamp is one of the four timestamps included in every <xref target="RFC5905">NTPv4</xref> packet used for time synchronization. A packet that strictly follows RFC 5905, i.e. it contains a transmit timestamp corresponding to the packet itself, is said to be in basic mode. There is, at least, four options where this timestamp can be captured i.e. by NTP daemon, by network drivers, or at the MAC or physical layer of the OSI model. A typical transmit timestamp in a software NTP implementation in the basic mode is the one captured by the NTP daemon using the system clock, before the computation of message digest and before the packet is passed to the operating system, and does not include any processing and queuing delays in the system, network drivers, and hardware. These delays may add a significant error to the offset and network delay measured by clients and peers of the server. Therefore, for best accuracy, the transmit timestamp should be captured as close to the wire as possible, but that is difficult to implement in the current packet since this timestamp is available only after the packet transmission. The protocol described in RFC 5905 does not specify any mechanism for the server to provide its clients and peers with this more accurate timestamp.</t>
+          
+      <t>Different mechanisms could be used to exchange this more accurate
+        timestamp. This document describes interleaved modes, in which an NTP packet contains a transmit timestamp corresponding to the previous packet that was sent to the client or peer. This transmit timestamp could be captured at one of the any four places mentioned above and shown in figure x. More specifically, this document:</t>
+
+        <t><list style = "numbers"> 
+          <t>Introduces and specifies a new interleaved client/server mode.</t>
+          <t>Specifies the interleaved symmetric mode based on the NTP reference implementation with some modifications.</t>
+          <t>Specifies the interleaved broadcast mode based purely on the NTP reference implementation. </t>
+        </list></t>    
+        
+      <t>This requires no changes to the NTP packet header format. Only the semantics of some timestamp fields is different. NTPv4 that supports interleaved modes is compatible with NTPv4 without this capability as well as with all previous NTP versions.</t>
+          
+      <t>The protocol requires both servers and clients/peers to keep some
+        state specific to the interleaved mode. It prevents traffic amplification that would be possible if the timestamp was sent in a separate message in order to keep the servers stateless.</t>
+
+      <t>This document assumes familiarity with RFC 5905. </t>
+
+    <section title="Requirements Language">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
           "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
           document are to be interpreted as described in <xref
               target="RFC2119">RFC 2119</xref>.</t>
-      </section>
-
-      </section>
-      <section title="Background">
-          <t>The transmit timestamp is one of the four timestamps included in 
-          every <xref target="RFC5905">NTPv4</xref> packet used for time 
-          synchronization. A typical transmit timestamp is captured in a 
-          software NTP implementation using the system clock, before the 
-          computation of message digest and before the packet is passed to the 
-          operating system, and does not include any processing and queuing 
-          delays in the system, network drivers, and hardware. These delays may 
-          add a significant error to the offset and network delay measured by 
-          clients and peers of the server. Therefore, for best accuracy, the 
-          transmit timestamp should be captured at the physical layer of the OSI
-          model, but that is difficult to implement in the current packet since 
-          this timestamp is available only after the packet transmission. The 
-          protocol described in RFC 5905 does not describe any mechanism for the
-          server to provide its clients and peers with this more accurate 
-          timestamp.</t>
-          
-        <t>Different mechanisms could be used to exchange this more accurate 
-          timestamp. This document describes interleaved modes, in which an NTP 
-          packet contains a transmit timestamp corresponding to the previous 
-          packet that was sent to the client or peer. This requires no changes 
-          to the NTP packet header format. Only the semantics of some timestamp 
-          fields is different.</t>
-          
-        <t>The protocol requires both servers and clients/peers to keep some 
-          state specific to the interleaved mode. It prevents traffic 
-          amplification that would be possible if the timestamp was sent in a 
-          separate message in order to keep the servers stateless.</t>
+    </section>
         
-      </section>
+    </section>
 
-    <section title="Client/server mode">
-      <t>The interleaved client/server mode is similar to the basic
-        client/server mode. The only difference between the two modes is in the
-        meaning of the transmit and origin timestamp fields.</t>
+    <section title="Interleaved Client/server mode">
+      <t>The interleaved client/server mode is similar to the basic client/
+        server mode. The only difference between the two modes is in the meaning of the transmit and origin timestamp fields.</t>
 
       <t>A client request in the basic mode has an origin timestamp equal to
         the transmit timestamp from the previous server response, or is zero. A
@@ -205,7 +183,7 @@
         timestamp (T3).</t>
     </section>
 
-    <section title="Symmetric mode">
+    <section title="Interleaved Symmetric mode">
       <t>The interleaved symmetric mode uses the same principles as the
         interleaved client/server mode. A packet in the interleaved symmetric
         mode has a transmit timestamp which corresponds to the previous packet
@@ -250,7 +228,7 @@
         reduce the error in the measured delay.</t>
     </section>
 
-    <section title="Broadcast mode">
+    <section title="Interleaved Broadcast mode">
       <t>A packet in the interleaved broadcast mode contains two transmit
         timestamps. One corresponds to the packet itself and is saved in the
         transmit timestamp field. The other corresponds to the previous packet
