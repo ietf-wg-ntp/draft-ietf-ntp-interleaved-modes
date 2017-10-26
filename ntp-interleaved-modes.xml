@@ -75,7 +75,8 @@
           <t>Specifies the interleaved broadcast mode based purely on the NTP reference implementation. </t>
         </list></t>    
         
-      <t>This requires no changes to the NTP packet header format. Only the semantics of some timestamp fields is different. NTPv4 that supports interleaved modes is compatible with NTPv4 without this capability as well as with all previous NTP versions.</t>
+      <t>This requires no changes to the NTP packet header format. Only the
+        semantics of some timestamp fields is different. NTPv4 that supports interleaved modes is compatible with NTPv4 without this capability as well as with all previous NTP versions.</t>
           
       <t>The protocol requires both servers and clients/peers to keep some
         state specific to the interleaved mode. It prevents traffic amplification that would be possible if the timestamp was sent in a separate message in order to keep the servers stateless.</t>
@@ -188,13 +189,10 @@
         interleaved client/server mode. A packet in the interleaved symmetric
         mode has a transmit timestamp which corresponds to the previous packet
         sent to the peer and an origin timestamp equal to the receive timestamp
-        from the last packet received from the peer.</t>
+        from the last packet received from the peer. This works well, as in NTP reference implementation, as long as the peers have same polling intervals.</t>
 
-      <t>The use of the interleaved mode in symmetric associations has
-        additional restrictions to prevent the peer from matching the transmit
-        timestamp with an incorrect packet in case the peers' transmissions do
-        not alternate (e.g. they use different polling intervals) and a packet
-        was lost.</t>
+      <t>However, the use of the interleaved mode in symmetric associations
+        requires additional restrictions to prevent the peer from matching the transmit timestamp with an incorrect packet in case the peers' transmissions do not alternate (e.g. they use different polling intervals) and a packet was lost.</t>
 
       <t>A peer A SHOULD send a peer B a packet in the interleaved mode only
         when the following conditions are met:</t>
@@ -253,8 +251,7 @@
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
-      <t>The interleaved modes described in this document are based on the
-        reference NTP implementation written by David Mills.</t>
+      <t>The interleaved symmetric and broadcast modes described in this document are based on the reference NTP implementation written by David Mills.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
@@ -263,8 +260,7 @@
 
     <section anchor="Security" title="Security Considerations">
       <t>Security issues that apply to the basic modes apply also to the
-        interleaved modes. They are described in <xref target="SECNTP">The
-          Security of NTP's Datagram Protocol</xref>.</t>
+        interleaved modes. They are described in <xref target="SECNTP">The Security of NTP's Datagram Protocol</xref>.</t>
 
       <t>Clients and peers SHOULD NOT leak the receive timestamp in packets
         sent to other peers or clients (e.g. as a reference timestamp) to
