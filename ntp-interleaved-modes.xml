@@ -192,7 +192,17 @@
         from the last packet received from the peer. This works well, as in NTP reference implementation, as long as the peers have same polling intervals.</t>
 
       <t>However, the use of the interleaved mode in symmetric associations
-        requires additional restrictions to prevent the peer from matching the transmit timestamp with an incorrect packet in case the peers' transmissions do not alternate (e.g. they use different polling intervals) and a packet was lost.</t>
+        requires additional restrictions to prevent the peer from matching the
+        transmit timestamp with an incorrect packet in case the peers'
+        transmissions do not alternate (e.g. they use different polling
+        intervals) and a packet was lost. The peers need to count valid packets
+        received between their transmissions in order to select between the
+        interleaved and basic mode.</t>
+
+      <t>A valid packet in this context is a packet which passed all NTP tests
+        for duplicate, replayed, bogus, and unauthenticated packets. Other
+        received packets may update the NTP state to allow (re)initialization
+        of the association, but they do not change the selection.</t>
 
       <t>A peer A SHOULD send a peer B a packet in the interleaved mode only
         when the following conditions are met:</t>
@@ -208,9 +218,6 @@
             packet to the peer B between the last two valid packets received
             from the peer B.</t>
       </list></t>
-
-      <t>Otherwise, the peer A SHOULD send the peer B a packet in the basic
-        mode.</t>
 
       <t>If the peer A has no association with the peer B and it responds with
         symmetric passive packets, it does not need to count the packets in
