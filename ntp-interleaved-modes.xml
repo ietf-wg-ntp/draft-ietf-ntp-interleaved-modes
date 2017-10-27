@@ -73,7 +73,7 @@
         close to the wire as possible, but that is difficult to implement in the current packet since this timestamp is available only after the packet transmission. The protocol described in RFC 5905 does not specify any mechanism for the server to provide its clients and peers with this more accurate timestamp.</t>
           
       <t>Different mechanisms could be used to exchange this more accurate
-        timestamp. This document describes interleaved modes, in which an NTP packet contains a transmit timestamp corresponding to the previous packet that was sent to the client or peer. This transmit timestamp could be captured at one of the any four places mentioned above and shown in figure x. More specifically, this document:</t>
+        timestamp. This document describes interleaved modes, in which an NTP packet contains a transmit timestamp corresponding to the previous packet that was sent to the client or peer. This transmit timestamp could be captured at one of the any four places mentioned above. More specifically, this document:</t>
 
         <t><list style = "numbers"> 
           <t>Introduces and specifies a new interleaved client/server mode.</t>
@@ -82,7 +82,7 @@
         </list></t>    
         
       <t>This requires no changes to the NTP packet header format. Only the
-        semantics of some timestamp fields is different. NTPv4 that supports interleaved modes is compatible with NTPv4 without this capability as well as with all previous NTP versions.</t>
+        semantics of some timestamp fields is different. NTPv4 that supports client/server and broadcast interleaved modes is compatible with NTPv4 without this capability as well as with all previous NTP versions.</t>
           
       <t>The protocol requires both servers and clients/peers to keep some
         state specific to the interleaved mode. It prevents traffic amplification that would be possible if the timestamp was sent in a separate message in order to keep the servers stateless.</t>
@@ -296,7 +296,7 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
     </section>
 
     <section anchor="Acknowledgements" title="Acknowledgements">
-      <t>The interleaved symmetric and broadcast modes described in this document are based on the reference NTP implementation written by David Mills.</t>
+      <t>The interleaved modes described in this document are based on the reference NTP implementation written by David Mills.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
