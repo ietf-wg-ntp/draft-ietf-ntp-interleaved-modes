@@ -35,7 +35,7 @@
         <organization>Boston University</organization>
         <address>
             <postal>
-                <street>111 Cummington Mall</street>
+                <street>111 Cummington St</street>
                 <city>Boston</city>
                 <region></region>
                 <code>02215</code>
@@ -72,7 +72,7 @@
         <t><list style = "numbers"> 
           <t>Introduces and specifies a new interleaved client/server mode.</t>
           <t>Specifies the interleaved symmetric mode based on the NTP reference implementation with some modifications.</t>
-          <t>Specifies the interleaved broadcast mode based purely on the NTP reference implementation. </t>
+          <t>Specifies the interleaved broadcast mode based purely on the NTP reference implementation.</t>
         </list></t>    
         
       <t>This requires no changes to the NTP packet header format. Only the
@@ -81,7 +81,7 @@
       <t>The protocol requires both servers and clients/peers to keep some
         state specific to the interleaved mode. It prevents traffic amplification that would be possible if the timestamp was sent in a separate message in order to keep the servers stateless.</t>
 
-      <t>This document assumes familiarity with RFC 5905. </t>
+      <t>This document assumes familiarity with RFC 5905.</t>
 
     <section title="Requirements Language">
       <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
@@ -199,12 +199,12 @@
 
       <t><list style="numbers">
           <t>The peer A has an active association with the peer B which was
-            specified with an option enabling the interleaved mode, or the peer
+            specified with an option enabling the interleaved mode, OR the peer
             A received at least one valid packet in the interleaved mode from
             the peer B.</t>
 
           <t>The peer A did not send a packet to the peer B since it received
-            the last valid packet from the peer B and it sent exactly one
+            the last valid packet from the peer B AND it sent exactly one
             packet to the peer B between the last two valid packets received
             from the peer B.</t>
       </list></t>
