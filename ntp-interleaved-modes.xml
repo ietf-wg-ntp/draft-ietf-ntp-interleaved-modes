@@ -143,6 +143,33 @@
         the interleaved mode per server response to prevent processing of very
         old timestamps in case a large number of packets is lost.</t>
 
+      <t>An example client/server exchange is shown in Figure
+        <xref format="counter" target="client-server-exchange"></xref>. The
+        transmit timestamp t3' in the first response is less accurate than the
+        timestamp t3 in the second response, which is in the interleaved mode.
+        The server is not able to respond in the interleaved mode to the third
+        request (e.g. it dropped the timestamp t6 and t7 to save timestamps for
+        other clients).</t>
+
+      <figure align="center" anchor="client-server-exchange"
+          title="Packet timestamps in client/server mode">
+        <artwork><![CDATA[
+         t2   t3               t6   t7              t10  t11'
+    -----+----+----------------+----+----------------+----+-----
+        /      \              /      \              /      \
+       /        \            /        \            /        \
+    --+----------+----------+----------+----------+----------+--
+      t1         t4         t5         t8         t9        t12
+
+Mode: B         B           I         I           I         B
+    +----+    +----+      +----+    +----+      +----+    +----+
+Org | 0  |    | t1 |      | t2 |    | t4 |      | t6 |    | t5 |
+Rx  | 0  |    | t2 |      | t4 |    | t6 |      | t8 |    |t10 |
+Tx  | t1 |    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
+    +----+    +----+      +----+    +----+      +----+    +----+
+        ]]></artwork>
+      </figure>
+
       <t>When the client receives a response, it performs all tests described
         in RFC 5905, except it needs to compare the origin timestamp with both
         transmit and receive timestamps from the request to detect the mode of
@@ -152,18 +179,21 @@
         following response in the interleaved mode is received.</t>
 
       <t>If the packet passed the tests and conforms to the interleaved mode,
-        the offset and delay SHOULD be computed using one of the following two
-        sets of timestamps. The first one is RECOMMENDED for clients that
-        filter measurements based on the delay.</t>
+        the client can compute the offset and delay using the formulas from RFC
+        5905 and one of two different sets of timestamps. The first set is
+        RECOMMENDED for clients that filter measurements based on the delay.
+        The corresponding timestamps from Figure <xref format="counter"
+          target="client-server-exchange"></xref> are written in
+        parentheses.</t>
 
       <t><list>
-          <t>T1 - transmit timestamp of the previous request</t>
+          <t>T1 - transmit timestamp of the previous request (t1)</t>
 
-          <t>T2 - receive timestamp from the previous response</t>
+          <t>T2 - receive timestamp from the previous response (t2)</t>
 
-          <t>T3 - transmit timestamp from the latest response</t>
+          <t>T3 - transmit timestamp from the latest response (t3)</t>
 
-          <t>T4 - receive timestamp of the previous response</t>
+          <t>T4 - receive timestamp of the previous response (t4)</t>
       </list></t>
 
       <t>The second set gives a more accurate measurement of the current
@@ -172,13 +202,13 @@
         and T4.</t>
 
       <t><list>
-          <t>T1 - transmit timestamp of the latest request</t>
+          <t>T1 - transmit timestamp of the latest request (t5)</t>
 
-          <t>T2 - receive timestamp from the latest response</t>
+          <t>T2 - receive timestamp from the latest response (t6)</t>
 
-          <t>T3 - transmit timestamp from the latest response</t>
+          <t>T3 - transmit timestamp from the latest response (t3)</t>
 
-          <t>T4 - receive timestamp of the previous response</t>
+          <t>T4 - receive timestamp of the previous response (t4)</t>
       </list></t>
 
       <t>Clients MAY filter measurements based on the mode. The maximum number
