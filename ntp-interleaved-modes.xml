@@ -143,21 +143,23 @@
         the interleaved mode per server response to prevent processing of very
         old timestamps in case a large number of packets is lost.</t>
 
-      <t>An example client/server exchange is shown in Figure
-        <xref format="counter" target="client-server-exchange"></xref>. The
-        transmit timestamp t3' in the first response is less accurate than the
-        timestamp t3 in the second response, which is in the interleaved mode.
-        The server is not able to respond in the interleaved mode to the third
-        request (e.g. it dropped the timestamp t6 and t7 to save timestamps for
-        other clients).</t>
+      <t>An example of packets in a client/server exchange using the
+        interleaved mode is shown in Figure <xref format="counter"
+          target="client-server-exchange"></xref>. The packets in the basic and
+        interleaved mode are indicated with B and I respectively. The
+        timestamps t1', t3' and t11' point to the same transmissions as t1, t3
+        and t11, but they may be less accurate. The third response is in the
+        basic mode, although the request was in the interleaved mode (e.g. the
+        server had to drop the timestamp t6 and t7 to save timestamps for other
+        clients using the interleaved mode).</t>
 
       <figure align="center" anchor="client-server-exchange"
-          title="Packet timestamps in client/server mode">
+          title="Packet timestamps in interleaved client/server mode">
         <artwork><![CDATA[
-         t2   t3               t6   t7              t10  t11'
+Server   t2   t3               t6   t7              t10  t11
     -----+----+----------------+----+----------------+----+-----
         /      \              /      \              /      \
-       /        \            /        \            /        \
+Client /        \            /        \            /        \
     --+----------+----------+----------+----------+----------+--
       t1         t4         t5         t8         t9        t12
 
@@ -165,18 +167,18 @@ Mode: B         B           I         I           I         B
     +----+    +----+      +----+    +----+      +----+    +----+
 Org | 0  |    | t1 |      | t2 |    | t4 |      | t6 |    | t5 |
 Rx  | 0  |    | t2 |      | t4 |    | t6 |      | t8 |    |t10 |
-Tx  | t1 |    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
+Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
     +----+    +----+      +----+    +----+      +----+    +----+
         ]]></artwork>
       </figure>
 
       <t>When the client receives a response, it performs all tests described
-        in RFC 5905, except it needs to compare the origin timestamp with both
-        transmit and receive timestamps from the request to detect the mode of
-        the response and detect bogus packets. The client SHOULD NOT update its
-        NTP state when an invalid response is received to not lose the
-        timestamps which will be needed to complete a measurement when the
-        following response in the interleaved mode is received.</t>
+        in RFC 5905, except the sanity check for bogus packet needs to compare
+        the origin timestamp with both transmit and receive timestamps from the
+        request. The client SHOULD NOT update its NTP state when an invalid
+        response is received to not lose the timestamps which will be needed to
+        complete a measurement when the following response in the interleaved
+        mode is received.</t>
 
       <t>If the packet passed the tests and conforms to the interleaved mode,
         the client can compute the offset and delay using the formulas from RFC
@@ -187,13 +189,13 @@ Tx  | t1 |    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
         parentheses.</t>
 
       <t><list>
-          <t>T1 - transmit timestamp of the previous request (t1)</t>
+          <t>T1 - local transmit timestamp of the previous request (t1)</t>
 
-          <t>T2 - receive timestamp from the previous response (t2)</t>
+          <t>T2 - remote receive timestamp from the previous response (t2)</t>
 
-          <t>T3 - transmit timestamp from the latest response (t3)</t>
+          <t>T3 - remote transmit timestamp from the latest response (t3)</t>
 
-          <t>T4 - receive timestamp of the previous response (t4)</t>
+          <t>T4 - local receive timestamp of the previous response (t4)</t>
       </list></t>
 
       <t>The second set gives a more accurate measurement of the current
@@ -202,13 +204,13 @@ Tx  | t1 |    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
         and T4.</t>
 
       <t><list>
-          <t>T1 - transmit timestamp of the latest request (t5)</t>
+          <t>T1 - local transmit timestamp of the latest request (t5)</t>
 
-          <t>T2 - receive timestamp from the latest response (t6)</t>
+          <t>T2 - remote receive timestamp from the latest response (t6)</t>
 
-          <t>T3 - transmit timestamp from the latest response (t3)</t>
+          <t>T3 - remote transmit timestamp from the latest response (t3)</t>
 
-          <t>T4 - receive timestamp of the previous response (t4)</t>
+          <t>T4 - local receive timestamp of the previous response (t4)</t>
       </list></t>
 
       <t>Clients MAY filter measurements based on the mode. The maximum number
