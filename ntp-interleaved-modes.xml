@@ -244,12 +244,13 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
         lost, the use of the interleaved mode in symmetric associations
         requires additional restrictions.</t>
 
-      <t>The peers need to count valid packets received between their
-        transmissions to determine in which mode a packet should be formed. A
-        valid packet in this context is a packet which passed all NTP tests for
-        duplicate, replayed, bogus, and unauthenticated packets. Other received
-        packets may update the NTP state to allow the (re)initialization of the
-        association, but they do not change the selection of the mode.</t>
+      <t>Peers which have an association need to count valid packets received
+        between their transmissions to determine in which mode a packet should
+        be formed. A valid packet in this context is a packet which passed all
+        NTP tests for duplicate, replayed, bogus, and unauthenticated packets.
+        Other received packets may update the NTP state to allow the
+        (re)initialization of the association, but they do not change the
+        selection of the mode.</t>
 
       <t>A peer A SHOULD send a peer B a packet in the interleaved mode only
         when the following conditions are met:</t>
