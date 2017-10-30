@@ -68,8 +68,12 @@
 
   <middle>
     <section title="Introduction">
-      <t>RFC 5905 describes the operations of NTPv4 in basic client/server,
-        symmetric and broadcast modes. The transmit timestamp is one of the four timestamps included in every <xref target="RFC5905">NTPv4</xref> packet used for time synchronization. A packet that strictly follows RFC 5905, i.e. it contains a transmit timestamp corresponding to the packet itself, is said to be in basic mode. </t>
+      <t><xref target="RFC5905">RFC 5905</xref> describes the operations of
+        NTPv4 in basic client/server, symmetric, and broadcast mode. The
+        transmit timestamp is one of the four timestamps included in every NTP
+        packet used for time synchronization. A packet that strictly follows
+        RFC 5905, i.e. it contains a transmit timestamp corresponding to the
+        packet itself, is said to be in basic mode.</t>
 
       <t>There are, at least, four options where a transmit timestamp can be
         captured i.e. by NTP daemon, by network drivers, or at the MAC or physical layer of the OSI model. A typical transmit timestamp in a software NTP implementation in the basic mode is the one captured by the NTP daemon using the system clock, before the computation of message digest and before the packet is passed to the operating system, and does not include any processing and queuing delays in the system, network drivers, and hardware. These delays may add a significant error to the offset and network delay measured by clients and peers of the server.</t>
