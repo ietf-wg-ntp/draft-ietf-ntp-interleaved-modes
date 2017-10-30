@@ -136,22 +136,25 @@
         timestamp in order to reliably detect whether received packets conform
         to the interleaved mode.</t>
 
-      <t>The first request from a client is always in the basic mode. It has a
-        zero origin timestamp and zero receive timestamp. Only when it receives
-        a valid response from the server, it will be able to send a request in
-        the interleaved mode. The client SHOULD limit the number of requests in
-        the interleaved mode per server response to prevent processing of very
-        old timestamps in case a large number of packets is lost.</t>
+      <t>The first request from a client is always in the basic mode and so is
+        the server response. It has a zero origin timestamp and zero receive
+        timestamp. Only when the client receives a valid response from the
+        server, it will be able to send a request in the interleaved mode. The
+        client SHOULD limit the number of requests in the interleaved mode per
+        server response to prevent processing of very old timestamps in case a
+        large number of packets is lost.</t>
 
       <t>An example of packets in a client/server exchange using the
         interleaved mode is shown in Figure <xref format="counter"
           target="client-server-exchange"></xref>. The packets in the basic and
         interleaved mode are indicated with B and I respectively. The
         timestamps t1', t3' and t11' point to the same transmissions as t1, t3
-        and t11, but they may be less accurate. The third response is in the
-        basic mode, although the request was in the interleaved mode (e.g. the
-        server had to drop the timestamp t6 and t7 to save timestamps for other
-        clients using the interleaved mode).</t>
+        and t11, but they may be less accurate. The first exchange is in the
+        basic mode followed by a second exchange in the interleaved mode. For
+        the third exchange, the client request is in the interleaved mode, but
+        the server response is in the basic mode, because the server did not
+        have the pair of timestamps t6 and t7 (e.g. they were dropped to save
+        timestamps for other clients using the interleaved mode).</t>
 
       <figure align="center" anchor="client-server-exchange"
           title="Packet timestamps in interleaved client/server mode">
@@ -173,12 +176,13 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
       </figure>
 
       <t>When the client receives a response, it performs all tests described
-        in RFC 5905, except the sanity check for bogus packet needs to compare
-        the origin timestamp with both transmit and receive timestamps from the
-        request. The client SHOULD NOT update its NTP state when an invalid
-        response is received to not lose the timestamps which will be needed to
-        complete a measurement when the following response in the interleaved
-        mode is received.</t>
+        in RFC 5905, except now the sanity check for bogus packet needs to
+        compare the origin timestamp with both transmit and receive timestamps
+        from the request in order to be able to detect if the response is in
+        the basic or interleaved mode. The client SHOULD NOT update its NTP
+        state when an invalid response is received to not lose the timestamps
+        which will be needed to complete a measurement when the following
+        response in the interleaved mode is received.</t>
 
       <t>If the packet passed the tests and conforms to the interleaved mode,
         the client can compute the offset and delay using the formulas from RFC
