@@ -15,7 +15,7 @@
 
 <rfc category="std" docName="draft-mlichvar-ntp-interleaved-modes-00" ipr="trust200902">
   <front>
-    <title>NTP interleaved modes</title>
+    <title>NTP Interleaved Modes</title>
 
     <author fullname="Miroslav Lichvar" initials="M." surname="Lichvar">
       <organization>Red Hat</organization>
