@@ -233,6 +233,23 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
         implicitly prefer measurements in the interleaved mode over the basic
         mode, because they have a shorter delay due to a more accurate transmit
         timestamp (T3).</t>
+
+      <t>The server MAY limit saving of the receive and transmit timestamps to
+        requests which have an origin timestamp specific to the interleaved
+        mode in order to not waste resources on clients using the basic mode.
+        Such an optimization will delay the first interleaved response of the
+        server to a client by one exchange.</t>
+
+      <t>A check for a non-zero origin timestamp works with clients that
+        implement <xref target="I-D.ietf-ntp-data-minimization">NTP data
+          minimization</xref>. To detect requests in the basic mode from
+        clients that do not implement the data minimization, the server can
+        encode in low-order bits of the receive and transmit timestamps below
+        precision of the clock a bit indicating whether the timestamp is a
+        receive timestamp. If the server receives a request with a non-zero
+        origin timestamp which does not indicate it is receive timestamp of the
+        server, the request is in the basic mode and it is not necessary to
+        save the new receive and transmit timestamp.</t>
     </section>
 
     <section title="Interleaved Symmetric mode">
