@@ -297,7 +297,7 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
         interleaved mode.</t>
 
       <t>The peers SHOULD compute the offset and delay using one the two sets
-        of timestamps specified in the client/server section. It MAY switch
+        of timestamps specified in the client/server section. They MAY switch
         between them to minimize the interval between T1 and T4 in order to
         reduce the error in the measured delay.</t>
     </section>
