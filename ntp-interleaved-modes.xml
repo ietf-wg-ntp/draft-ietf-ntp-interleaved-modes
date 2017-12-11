@@ -328,6 +328,9 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
 
     <section anchor="Acknowledgements" title="Acknowledgements">
       <t>The interleaved modes described in this document are based on the reference NTP implementation written by David Mills.</t>
+
+      <t>The authors would like to thank Kristof Teichel for his useful
+        comments.</t>
     </section>
 
     <section anchor="IANA" title="IANA Considerations">
