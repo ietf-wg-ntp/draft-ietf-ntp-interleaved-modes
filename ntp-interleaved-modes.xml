@@ -283,9 +283,10 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
             the peer B.</t>
 
           <t>The peer A did not send a packet to the peer B since it received
-            the last valid packet from the peer B AND it sent exactly one
-            packet to the peer B between the last two valid packets received
-            from the peer B.</t>
+            the last valid packet from the peer B.</t>
+
+          <t>The previous packet that the peer A sent to the peer B was the
+            only response to a packet received from the peer B.</t>
       </list></t>
 
       <t>If the peer A has no association with the peer B and it responds with
