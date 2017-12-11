@@ -289,6 +289,34 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
             only response to a packet received from the peer B.</t>
       </list></t>
 
+      <t>An example of packets exchanged in a symmetric association is shown in
+        Figure <xref format="counter" target="peer-exchange"></xref>. The
+        minimum polling interval of the peer A is twice as long as the maximum
+        polling interval of the peer B. The first packets sent by the peers are
+        in the basic mode. The second and third packet sent by the peer A is in
+        the interleaved mode. The second packet sent by the peer B is in the
+        interleaved mode, but the following packets sent by the peer are in the
+        basic mode, because multiple responses are sent per request.</t>
+
+      <figure align="center" anchor="peer-exchange"
+          title="Packet timestamps in interleaved symmetric mode">
+        <artwork><![CDATA[
+Peer A   t2 t3       t6          t8 t9      t12         t14 t15
+    -----+--+--------+-----------+--+--------+-----------+--+-----
+        /    \      /           /    \      /           /    \
+Peer B /      \    /           /      \    /           /      \
+    --+--------+--+-----------+--------+--+-----------+--------+--
+      t1       t4 t5          t7      t10 t11        t13      t16
+
+Mode: B      B      I         B      I      B         B      I
+    +----+ +----+ +----+    +----+ +----+ +----+    +----+ +----+
+Org | 0  | | t1'| | t2 |    | t3'| | t4 | | t3 |    | t3 | |t10 |
+Rx  | 0  | | t2 | | t4 |    | t4 | | t8 | |t10 |    |t10 | |t14 |
+Tx  | t1'| | t3'| | t1 |    | t7'| | t3 | |t11'|    |t13'| | t9 |
+    +----+ +----+ +----+    +----+ +----+ +----+    +----+ +----+
+        ]]></artwork>
+      </figure>
+
       <t>If the peer A has no association with the peer B and it responds with
         symmetric passive packets, it does not need to count the packets in
         order to meet the restrictions, because each request has at most one
