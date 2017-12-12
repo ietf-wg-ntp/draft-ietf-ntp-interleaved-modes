@@ -13,7 +13,7 @@
 <?rfc compact="yes"?>
 <?rfc subcompact="no"?>
 
-<rfc category="std" docName="draft-mlichvar-ntp-interleaved-modes-00" ipr="trust200902">
+<rfc category="std" docName="draft-mlichvar-ntp-interleaved-modes-01" ipr="trust200902">
   <front>
     <title>NTP Interleaved Modes</title>
 
@@ -45,7 +45,7 @@
         </address>
     </author>
 
-    <date year="2017" month="October" day="30"/>
+    <date year="2017" month="December" day="12"/>
 
     <area>General</area>
 
