@@ -131,19 +131,31 @@
         IP addresses, but it SHOULD NOT separate them by port numbers, i.e.
         clients are allowed to change their source port between requests.</t>
 
-      <t>When the server receives a request, it SHOULD compare the origin
-        timestamp with all receive timestamps it has saved (for the IP
-        address). If a match is found, the server SHOULD respond with a packet
-        in the interleaved mode, which contains the transmit timestamp
-        corresponding to the packet which had the matching receive timestamp.
-        If no match is found, the server MUST NOT respond in the interleaved
-        mode. The server MAY always respond in the basic mode. In both cases,
-        the server SHOULD save the new receive and transmit timestamps.</t>
-
       <t>Both servers and clients that support the interleaved mode MUST NOT
         send a packet that has a transmit timestamp equal to the receive
         timestamp in order to reliably detect whether received packets conform
         to the interleaved mode.</t>
+
+      <t>When the server receives a request from a client, it SHOULD respond
+        in the interleaved mode if the following conditions are met:</t>
+
+      <t><list style="numbers">
+          <t>The request does not have a receive timestamp equal to the transmit
+            timestamp.</t>
+
+          <t>The origin timestamp from the request matches the local receive
+            timestamp of a previous request that the server has saved (for the
+            client if it separates timestamps by IP addresses).</t>
+      </list></t>
+
+      <t>A response in the interleaved mode MUST contain the transmit timestamp
+        of the response which contained the receive timestamp matching the
+        origin timestamp from the request.</t>
+
+      <t>If the conditions are not met, the server MUST NOT respond in the
+        interleaved mode. The server MAY always respond in the basic mode. In
+        any case, the server SHOULD save the new receive and transmit
+        timestamps.</t>
 
       <t>The first request from a client is always in the basic mode and so is
         the server response. It has a zero origin timestamp and zero receive
