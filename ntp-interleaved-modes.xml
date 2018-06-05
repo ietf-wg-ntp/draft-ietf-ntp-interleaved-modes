@@ -338,6 +338,29 @@ Tx  | t1'| | t3'| | t1 |    | t7'| | t3 | |t11'|    |t13'| | t9 |
         and is saved in the origin timestamp field. The packet is compatible
         with the basic mode, which uses a zero origin timestamp.</t>
 
+      <t>An example of packets sent in the broadcast mode is shown in
+        Figure <xref format="counter" target="broadcast-transmissions"></xref>.
+      </t>
+
+      <figure align="center" anchor="broadcast-transmissions"
+          title="Packet timestamps in interleaved broadcast mode">
+        <artwork><![CDATA[
+Server         t1           t3           t5           t7
+         ------+------------+------------+------------+---------
+                \            \            \            \
+Client           \            \            \            \
+         ---------+------------+------------+------------+------
+                  t2           t4           t6           t8
+
+Mode:           B            I            I            I
+              +----+       +----+       +----+       +----+
+Org           | 0  |       | t1 |       | t3 |       | t5 |
+Rx            | 0  |       | 0  |       | 0  |       | 0  |
+Tx            | t1'|       | t3'|       | t5'|       | t7'|
+              +----+       +----+       +----+       +----+
+        ]]></artwork>
+      </figure>
+
       <t>A client which does not support the interleaved mode ignores the
         origin timestamp and processes all packets as if they were in the basic
         mode.</t>
