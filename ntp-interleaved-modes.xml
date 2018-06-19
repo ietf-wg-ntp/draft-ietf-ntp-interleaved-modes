@@ -196,14 +196,27 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
         ]]></artwork>
       </figure>
 
-      <t>When the client receives a response, it performs all tests described
-        in RFC 5905, except now the sanity check for bogus packet needs to
-        compare the origin timestamp with both transmit and receive timestamps
-        from the request in order to be able to detect if the response is in
-        the basic or interleaved mode. The client SHOULD NOT update its NTP
-        state when an invalid response is received to not lose the timestamps
-        which will be needed to complete a measurement when the following
-        response in the interleaved mode is received.</t>
+      <t>When the client receives a response from the server, it performs the
+        tests described in RFC 5905. Two of the tests are modified for the
+        interleaved mode:</t>
+
+      <t><list style="numbers">
+          <t>The check for duplicate packets SHOULD compare both receive and
+            transmit timestamps in order to not drop a valid response in the
+            interleaved mode if it follows a response in the basic mode and
+            they contain the same transmit timestamp.</t>
+
+          <t>The check for bogus packets SHOULD compare the origin timestamp
+            with both transmit and receive timestamps from the request. If the
+            origin timestamp is equal to the transmit timestamp, the response
+            is in the basic mode. If the origin timestamp is equal to the
+            receive timestamp, the response is in the interleaved mode.</t>
+      </list></t>
+
+      <t>The client SHOULD NOT update its NTP state when an invalid response is
+        received to not lose the timestamps which will be needed to complete a
+        measurement when the following response in the interleaved mode is
+        received.</t>
 
       <t>If the packet passed the tests and conforms to the interleaved mode,
         the client can compute the offset and delay using the formulas from RFC
