@@ -272,8 +272,8 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
         encode in low-order bits of the receive and transmit timestamps below
         precision of the clock a bit indicating whether the timestamp is a
         receive timestamp. If the server receives a request with a non-zero
-        origin timestamp which does not indicate it is receive timestamp of the
-        server, the request is in the basic mode and it is not necessary to
+        origin timestamp which does not indicate it is a receive timestamp of
+        the server, the request is in the basic mode and it is not necessary to
         save the new receive and transmit timestamp.</t>
     </section>
 
