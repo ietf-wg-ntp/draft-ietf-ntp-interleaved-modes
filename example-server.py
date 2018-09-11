@@ -31,7 +31,7 @@ class NtpServer:
             return False;
 
         # Check mode and version
-        if packet[0] & 7 != 3 or (packet[0] >> 3) & 7 not in (1, 2, 3, 4):
+        if packet[0] & 7 not in (1, 3) or (packet[0] >> 3) & 7 not in (1, 2, 3, 4):
             return False;
 
         return True
