@@ -164,10 +164,23 @@
         IP addresses, but it SHOULD NOT separate them by port numbers, i.e.
         clients are allowed to change their source port between requests.</t>
 
+      <t>The server MAY restrict the interleaved mode to specific IP addresses
+        and/or authenticated clients.</t>
+
       <t>Both servers and clients that support the interleaved mode MUST NOT
         send a packet that has a transmit timestamp equal to the receive
         timestamp in order to reliably detect whether received packets conform
         to the interleaved mode.</t>
+
+      <t>The transmit and receive timestamps in server responses need to be
+        unique to prevent two different clients from sending requests with the
+        same origin timestamp and the server responding in the interleaved mode
+        with an incorrect transmit timestamp. If the timestamps are not
+        guaranteed to be monotonically increasing, the server SHOULD check that
+        the transmit and receive timestamp is not already saved as a receive
+        timestamp of a previous request (from the same IP address if the server
+        separates timestamps by addresses), and generate a new timestamp if
+        necessary.</t>
 
       <t>When the server receives a request from a client, it SHOULD respond
         in the interleaved mode if the following conditions are met:</t>
@@ -178,12 +191,13 @@
 
           <t>The origin timestamp from the request matches the local receive
             timestamp of a previous request that the server has saved (for the
-            client if it separates timestamps by IP addresses).</t>
+            IP address if it separates timestamps by addresses).</t>
       </list></t>
 
       <t>A response in the interleaved mode MUST contain the transmit timestamp
         of the response which contained the receive timestamp matching the
-        origin timestamp from the request.</t>
+        origin timestamp from the request. The server MAY drop the timestamps
+        immediately after sending the response.</t>
 
       <t>If the conditions are not met, the server MUST NOT respond in the
         interleaved mode. The server MAY always respond in the basic mode. In
@@ -193,9 +207,16 @@
       <t>The first request from a client is always in the basic mode and so is
         the server response. It has a zero origin timestamp and zero receive
         timestamp. Only when the client receives a valid response from the
-        server, it will be able to send a request in the interleaved mode. The
-        client SHOULD limit the number of requests in the interleaved mode per
-        server response to prevent processing of very old timestamps in case a
+        server, it will be able to send a request in the interleaved mode.</t>
+
+      <t>The protocol recovers from packet loss. When a client request or
+        server response is lost, the client will use the same origin timestamp
+        in the next request, and the server can respond in the interleaved mode
+        if it still has the timestamps. If it does not have the timestamps, it
+        will respond in the basic mode and save new timestamps, which will
+        enable an interleaved response to the following request. The client
+        SHOULD limit the number of requests in the interleaved mode between
+        server responses to prevent processing of very old timestamps in case a
         large number of packets is lost.</t>
 
       <t>An example of packets in a client/server exchange using the
