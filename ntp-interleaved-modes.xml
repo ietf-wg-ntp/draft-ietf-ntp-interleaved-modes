@@ -519,12 +519,12 @@ Tx            | t1'|       | t3'|       | t5'|       | t7'|
       &RFC2119;
 
       &RFC5905;
+
+      &DATAMIN;
     </references>
 
     <references title="Informative References">
       &RFC7384;
-
-      &DATAMIN;
 
       <reference anchor="SECNTP" target="http://eprint.iacr.org/2016/1006">
         <front>
