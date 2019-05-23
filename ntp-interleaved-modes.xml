@@ -197,8 +197,9 @@
 
       <t>A response in the interleaved mode MUST contain the transmit timestamp
         of the response which contained the receive timestamp matching the
-        origin timestamp from the request. The server MAY drop the timestamps
-        immediately after sending the response.</t>
+        origin timestamp from the request. The server SHOULD drop the timestamps
+        after sending the response. The receive timestamp MUST NOT be used
+        again to detect a request conforming to the interleaved mode.</t>
 
       <t>If the conditions are not met, the server MUST NOT respond in the
         interleaved mode. The server MAY always respond in the basic mode. In
@@ -212,13 +213,15 @@
 
       <t>The protocol recovers from packet loss. When a client request or
         server response is lost, the client will use the same origin timestamp
-        in the next request, and the server can respond in the interleaved mode
-        if it still has the timestamps. If it does not have the timestamps, it
+        in the next request. The server can respond in the interleaved mode if
+        it still has the timestamps corresponding to the origin timestamp. If
+        the server already responded to the timestamp in the interleaved mode,
+        or it had to drop the timestamps for other reasons, it
         will respond in the basic mode and save new timestamps, which will
         enable an interleaved response to the following request. The client
         SHOULD limit the number of requests in the interleaved mode between
         server responses to prevent processing of very old timestamps in case a
-        large number of packets is lost.</t>
+        large number of consecutive requests is lost.</t>
 
       <t>An example of packets in a client/server exchange using the
         interleaved mode is shown in Figure <xref format="counter"
