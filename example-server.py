@@ -47,7 +47,7 @@ class NtpServer:
 
         if receive_ts != transmit_ts and origin_ts in self.saved_timestamps:
             print("Response in interleaved mode       : ", end="")
-            transmit_ts = self.saved_timestamps[origin_ts]
+            transmit_ts = self.saved_timestamps.pop(origin_ts)
             origin_ts = receive_ts
             receive_ts = server_receive
         else:
@@ -66,13 +66,13 @@ class NtpServer:
     def save_timestamps(self, receive_ts, transmit_ts):
         assert(receive_ts not in self.saved_timestamps)
         assert(len(self.saved_timestamps) <= self.max_timestamps)
-        assert(len(self.saved_timestamps) == len(self.timestamp_queue))
+        assert(len(self.saved_timestamps) <= len(self.timestamp_queue))
 
         self.saved_timestamps[receive_ts] = transmit_ts
 
         self.timestamp_queue.append(receive_ts)
         if len(self.timestamp_queue) > self.max_timestamps:
-            self.saved_timestamps.pop(self.timestamp_queue[0])
+            self.saved_timestamps.pop(self.timestamp_queue[0], 0)
             self.timestamp_queue.popleft()
 
     def run(self):
