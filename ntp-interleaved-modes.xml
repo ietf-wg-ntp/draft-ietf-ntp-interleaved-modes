@@ -84,7 +84,7 @@
         be captured with a software NTP implementation running on an operating
         system:</t>
 
-      <t><list style = "numbers">
+      <t><list style="numbers">
           <t>User space (software)</t>
           <t>Network device driver or kernel (software)</t>
           <t>Data link layer (hardware - MAC chip)</t>
