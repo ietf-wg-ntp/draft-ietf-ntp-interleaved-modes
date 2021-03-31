@@ -375,7 +375,7 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
       </list></t>
 
       <t>An example of packets exchanged in a symmetric association is shown in
-        Figure <xref format="counter" target="peer-exchange"></xref>. The
+        Figure <xref format="counter" target="peer-exchange"/>. The
         minimum polling interval of the peer A is twice as long as the maximum
         polling interval of the peer B. The first packets sent by the peers are
         in the basic mode. The second and third packet sent by the peer A is in
