@@ -220,7 +220,7 @@
         the server already responded to the timestamp in the interleaved mode,
         or it had to drop the timestamps for other reasons, it
         will respond in the basic mode and save new timestamps, which will
-        enable an interleaved response to the following request. The client
+        enable an interleaved response to the subsequent request. The client
         SHOULD limit the number of requests in the interleaved mode between
         server responses to prevent processing of very old timestamps in case a
         large number of consecutive requests is lost.</t>
@@ -229,7 +229,7 @@
         interleaved mode is shown in Figure <xref format="counter"
           target="client-server-exchange"></xref>. The packets in the basic and
         interleaved mode are indicated with B and I respectively. The
-        timestamps t1', t3' and t11' point to the same transmissions as t1, t3
+        timestamps t1~, t3~ and t11~ point to the same transmissions as t1, t3
         and t11, but they may be less accurate. The first exchange is in the
         basic mode followed by a second exchange in the interleaved mode. For
         the third exchange, the client request is in the interleaved mode, but
@@ -249,9 +249,9 @@ Client /        \            /        \            /        \
 
 Mode: B         B           I         I           I         B
     +----+    +----+      +----+    +----+      +----+    +----+
-Org | 0  |    | t1'|      | t2 |    | t4 |      | t6 |    | t5 |
+Org | 0  |    | t1~|      | t2 |    | t4 |      | t6 |    | t5 |
 Rx  | 0  |    | t2 |      | t4 |    | t6 |      | t8 |    |t10 |
-Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
+Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
     +----+    +----+      +----+    +----+      +----+    +----+
         ]]></artwork>
       </figure>
@@ -275,7 +275,7 @@ Tx  | t1'|    | t3'|      | t1 |    | t3 |      | t5 |    |t11'|
 
       <t>The client SHOULD NOT update its NTP state when an invalid response is
         received to not lose the timestamps which will be needed to complete a
-        measurement when the following response in the interleaved mode is
+        measurement when the subsequent response in the interleaved mode is
         received.</t>
 
       <t>If the packet passed the tests and conforms to the interleaved mode,
@@ -395,9 +395,9 @@ Peer B /      \    /           /      \    /           /      \
 
 Mode: B      B      I         B      I      B         B      I
     +----+ +----+ +----+    +----+ +----+ +----+    +----+ +----+
-Org | 0  | | t1'| | t2 |    | t3'| | t4 | | t3 |    | t3 | |t10 |
+Org | 0  | | t1~| | t2 |    | t3~| | t4 | | t3 |    | t3 | |t10 |
 Rx  | 0  | | t2 | | t4 |    | t4 | | t8 | |t10 |    |t10 | |t14 |
-Tx  | t1'| | t3'| | t1 |    | t7'| | t3 | |t11'|    |t13'| | t9 |
+Tx  | t1~| | t3~| | t1 |    | t7~| | t3 | |t11~|    |t13~| | t9 |
     +----+ +----+ +----+    +----+ +----+ +----+    +----+ +----+
         ]]></artwork>
       </figure>
@@ -441,7 +441,7 @@ Mode:           B            I            I            I
               +----+       +----+       +----+       +----+
 Org           | 0  |       | t1 |       | t3 |       | t5 |
 Rx            | 0  |       | 0  |       | 0  |       | 0  |
-Tx            | t1'|       | t3'|       | t5'|       | t7'|
+Tx            | t1~|       | t3~|       | t5~|       | t7~|
               +----+       +----+       +----+       +----+
         ]]></artwork>
       </figure>
