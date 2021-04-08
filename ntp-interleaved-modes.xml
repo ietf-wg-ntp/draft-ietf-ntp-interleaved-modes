@@ -92,7 +92,7 @@
           <t>Physical layer (hardware - PHY chip)</t>
       </list></t>
 
-      <t>Software timestamps captured in the user space in the NTP
+      <t>Software timestamps captured in user space in the NTP
         implementation itself are least accurate. They do not include
         system calls used for sending and receiving packets, processing and
         queuing delays in the system, network device drivers, and hardware.
@@ -116,7 +116,7 @@
         the transmission. The server could respond to each request with two
         packets. The second packet would contain the transmit timestamp
         corresponding to the first packet. However, such a protocol would
-        enable a traffic amplification, or it would use packets with an
+        enable a traffic amplification attack, or it would use packets with an
         asymmetric length, which would cause an asymmetry in the network delay
         and an error in the measured offset.</t>
 
@@ -128,9 +128,27 @@
         mentioned above. Both servers and clients/peers are required to keep
         some state specific to the interleaved mode.</t>
 
-      <t>The protocol does not change the NTP packet header format. Only the
-        semantics of some timestamp fields is different. NTPv4 that supports client/server and broadcast interleaved modes is compatible with NTPv4 without this capability as well as with all previous NTP versions.</t>
-          
+      <t>The protocol does not change the NTP packet header format, only the
+        semantics of some timestamp fields. An NTPv4 implementation that
+        supports the client/server and broadcast interleaved modes
+        interoperates with NTPv4 implementations without this capability. A
+        peer using the symmetric interleaved mode does not fully interoperate
+        with a peer which does not support it. The mode needs to be configured
+        specifically for each symmetric association.</t>
+
+      <t>The negotiation in the protocol is implicit. The origin timestamp
+        enables servers and peers to detect requests conforming to the
+        interleaved mode. A response can be valid only in one mode. If a client
+        or peer that does not support interleaved mode received a response
+        conforming to the interleaved mode, it would be rejected as bogus. An
+        explicit negotiation would require a new extension field, which would
+        not work well with implementations that do not respond to requests with
+        unknown extension fields.</t>
+
+      <t>Requests and responses cannot always be formed in interleaved mode.
+        Servers, clients, and peers are required to support both interleaved
+        and basic modes.</t>
+
       <t>This document assumes familiarity with RFC 5905.</t>
 
       <section title="Requirements Language">
@@ -146,6 +164,10 @@
     <section title="Interleaved Client/server mode">
       <t>The interleaved client/server mode is similar to the basic client/
         server mode. The only difference between the two modes is in the meaning of the transmit and origin timestamp fields.</t>
+
+      <t>The origin timestamp is a cookie, which is used to detect a packet
+        which is not a response to the last packet sent in the other direction.
+        Such packets are called bogus packets in RFC 5905.</t>
 
       <t>A client request in the basic mode has an origin timestamp equal to
         the transmit timestamp from the previous server response, or is zero. A
@@ -203,7 +225,8 @@
         after sending the response. The receive timestamp MUST NOT be used
         again to detect a request conforming to the interleaved mode.</t>
 
-      <t>If the conditions are not met, the server MUST NOT respond in the
+      <t>If the conditions are not met (i.e. the request is not detected to
+        conform to the interleaved mode), the server MUST NOT respond in the
         interleaved mode. The server MAY always respond in the basic mode. In
         any case, the server SHOULD save the new receive and transmit
         timestamps.</t>
@@ -344,6 +367,11 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         sent to the peer and an origin timestamp equal to the receive timestamp
         from the last packet received from the peer.</t>
 
+      <t>To enable synchronization in both directions of a symmetric
+        association, both peers need to support the interleaved mode. For this
+        reason, it SHOULD be disabled by default and enabled with an option in
+        the configuration of the active side of the association.</t>
+
       <t>In order to prevent the peer from matching the transmit timestamp with
         an incorrect packet when the peers' transmissions do not alternate
         (e.g. they use different polling intervals) and a previous packet was
@@ -363,7 +391,7 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
 
       <t><list style="numbers">
           <t>The peer A has an active association with the peer B which was
-            specified with an option enabling the interleaved mode, OR the peer
+            specified with the option enabling the interleaved mode, OR the peer
             A received at least one valid packet in the interleaved mode from
             the peer B.</t>
 
@@ -410,7 +438,7 @@ Tx  | t1~| | t3~| | t1 |    | t7~| | t3 | |t11~|    |t13~| | t9 |
         respond in the interleaved mode if the request was not in the
         interleaved mode.</t>
 
-      <t>The peers SHOULD compute the offset and delay using one the two sets
+      <t>The peers SHOULD compute the offset and delay using one of the two sets
         of timestamps specified in the client/server section. They MAY switch
         between them to minimize the interval between T1 and T4 in order to
         reduce the error in the measured delay.</t>
