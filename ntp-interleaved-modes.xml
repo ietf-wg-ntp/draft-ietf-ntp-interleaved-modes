@@ -166,9 +166,13 @@
       <t>The interleaved client/server mode is similar to the basic client/
         server mode. The only difference between the two modes is in the meaning of the transmit and origin timestamp fields.</t>
 
-      <t>The origin timestamp is a cookie, which is used to detect a packet
-        which is not a response to the last packet sent in the other direction.
-        Such packets are called bogus packets in RFC 5905.</t>
+      <t>The origin timestamp is a cookie which is used to detect that a
+        received packet is a response to the last packet sent in the other
+        direction of the association. It is a copy of one of the timestamps
+        from the packet to which it is responding, or zero if it is not a
+        response. Servers following RFC 5905 ignore the origin timestamp in
+        client requests. A server response which does not have a matching
+        origin timestamp is called bogus.</t>
 
       <t>A client request in the basic mode has an origin timestamp equal to
         the transmit timestamp from the previous server response, or is zero. A
