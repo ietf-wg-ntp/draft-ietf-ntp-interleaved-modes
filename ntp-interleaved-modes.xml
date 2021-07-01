@@ -391,7 +391,7 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         selection of the mode.</t>
 
       <t>A peer A SHOULD send a peer B a packet in the interleaved mode only
-        when the following conditions are met:</t>
+        when all of the following conditions are met:</t>
 
       <t><list style="numbers">
           <t>The peer A has an active association with the peer B which was
