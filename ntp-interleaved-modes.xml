@@ -3,6 +3,7 @@
 <!ENTITY RFC2119 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml">
 <!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC5905 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5905.xml">
+<!ENTITY RFC5906 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5906.xml">
 <!ENTITY RFC7384 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY RFC9109 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9109.xml">
 <!ENTITY DATAMIN SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-data-minimization.xml">
@@ -83,8 +84,8 @@
         an error.</t>
 
       <t>There are at least four options where a timestamp of an NTP packet may
-        be captured with a software NTP implementation running on an operating
-        system:</t>
+        be captured with a software NTP implementation running on a
+        general-purpose operating system:</t>
 
       <t><list style="numbers">
           <t>User space (software)</t>
@@ -130,22 +131,29 @@
         servers and clients/peers are required to keep
         some state specific to the interleaved mode.</t>
 
-      <t>The protocol does not change the NTP packet header format, only the
-        semantics of some timestamp fields. An NTPv4 implementation that
+      <t>An NTPv4 implementation that
         supports the client/server and broadcast interleaved modes
         interoperates with NTPv4 implementations without this capability. A
         peer using the symmetric interleaved mode does not fully interoperate
         with a peer which does not support it. The mode needs to be configured
         specifically for each symmetric association.</t>
 
-      <t>The negotiation in the protocol is implicit. The origin timestamp
-        enables servers and peers to detect requests conforming to the
+      <t>The interleaved modes do not change the NTP packet header format and
+        do not use new extension fields. The negotiation is implicit. The
+        protocol is extended with new values that can be assigned to the origin
+        and transmit timestamp. Servers and peers check the origin timestamp to
+        detect requests conforming to the
         interleaved mode. A response can be valid only in one mode. If a client
         or peer that does not support interleaved mode received a response
-        conforming to the interleaved mode, it would be rejected as bogus. An
-        explicit negotiation would require a new extension field, which would
-        not work well with implementations that do not respond to requests with
-        unknown extension fields.</t>
+        conforming to the interleaved mode, it would be rejected as bogus.</t>
+
+      <t>An explicit negotiation would require a new extension field. RFC 5905
+        does not specify how servers should handle requests with an unknown
+        extension field. The original use of extension fields was
+        authentication with <xref target="RFC5906">Autokey</xref>, which cannot
+        be negotiated. Some existing implementations do not respond to requests
+        with unknown extension fields. This behavior would prevent clients from
+        reliably detecting support for the interleaved mode.</t>
 
       <t>Requests and responses cannot always be formed in interleaved mode.
         It cannot be used exclusively. Servers, clients, and peers that support
@@ -585,6 +593,8 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
     </references>
 
     <references title="Informative References">
+      &RFC5906;
+
       &RFC7384;
 
       &RFC9109;
