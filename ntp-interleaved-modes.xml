@@ -4,7 +4,7 @@
 <!ENTITY RFC8174 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.8174.xml">
 <!ENTITY RFC5905 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5905.xml">
 <!ENTITY RFC7384 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7384.xml">
-<!ENTITY PORTRND SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-port-randomization.xml">
+<!ENTITY RFC9109 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9109.xml">
 <!ENTITY DATAMIN SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-data-minimization.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
@@ -193,7 +193,7 @@
         using the interleaved mode. The server MAY separate the timestamps by
         IP addresses, but it SHOULD NOT separate them by port numbers to
         support clients that change their port between requests, as recommended
-        by <xref target="I-D.ietf-ntp-port-randomization"/>.</t>
+        in <xref target="RFC9109">RFC 9109</xref>.</t>
 
       <t>The server MAY restrict the interleaved mode to specific IP addresses
         and/or authenticated clients.</t>
@@ -570,7 +570,7 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
     <references title="Informative References">
       &RFC7384;
 
-      &PORTRND;
+      &RFC9109;
 
       <reference anchor="SECNTP" target="http://eprint.iacr.org/2016/1006">
         <front>
