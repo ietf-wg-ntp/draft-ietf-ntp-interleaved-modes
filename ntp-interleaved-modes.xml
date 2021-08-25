@@ -123,10 +123,11 @@
 
       <t>This document describes an interleaved client/server, interleaved
         symmetric, and interleaved broadcast mode. In these modes, the server
-        sends a single packet, which contains a transmit timestamp
-        corresponding to the previous packet that was sent to the client or
-        peer. This transmit timestamp can be captured at any of the four places
-        mentioned above. Both servers and clients/peers are required to keep
+        sends a packet which contains a transmit timestamp corresponding to the
+        transmission of the previous packet that was sent to the client or
+        peer. This transmit timestamp can be captured in any software or
+        hardware component involved in the transmission of the packet. Both
+        servers and clients/peers are required to keep
         some state specific to the interleaved mode.</t>
 
       <t>The protocol does not change the NTP packet header format, only the
@@ -147,8 +148,8 @@
         unknown extension fields.</t>
 
       <t>Requests and responses cannot always be formed in interleaved mode.
-        Servers, clients, and peers are required to support both interleaved
-        and basic modes.</t>
+        It cannot be used exclusively. Servers, clients, and peers that support
+        the interleaved mode need to support also the basic mode.</t>
 
       <t>This document assumes familiarity with RFC 5905.</t>
 
@@ -164,7 +165,8 @@
 
     <section title="Interleaved Client/server mode">
       <t>The interleaved client/server mode is similar to the basic client/
-        server mode. The only difference between the two modes is in the meaning of the transmit and origin timestamp fields.</t>
+        server mode. The difference between the two modes is in the values
+        saved to the origin and transmit timestamp fields.</t>
 
       <t>The origin timestamp is a cookie which is used to detect that a
         received packet is a response to the last packet sent in the other
@@ -175,17 +177,20 @@
         origin timestamp is called bogus.</t>
 
       <t>A client request in the basic mode has an origin timestamp equal to
-        the transmit timestamp from the previous server response, or is zero. A
-        server response in the basic mode has an origin timestamp equal to the
-        transmit timestamp from the client's request. The transmit timestamps
-        correspond to the packets in which they are included.</t>
+        the transmit timestamp from the last valid server response, or is zero
+        (which indicates the first request of the association). A server
+        response in the basic mode has an origin timestamp equal to the
+        transmit timestamp from the client request. The transmit timestamp in
+        the response corresponds to the transmission of the response in which
+        the timestamp is contained.</t>
 
       <t>A client request in the interleaved mode has an origin timestamp equal
-        to the receive timestamp from the previous server response. A server
+        to the receive timestamp from the last valid server response. A server
         response in the interleaved mode has an origin timestamp equal to the
-        receive timestamp from the client's request. The transmit timestamps
-        correspond to the previous packets that were sent to the server or
-        client.</t>
+        receive timestamp from the client request. The transmit timestamp in
+        the response corresponds to the transmission of the previous response
+        which had the receive timestamp equal to the origin timestamp from the
+        request.</t>
 
       <t>A server which supports the interleaved mode needs to save pairs of
         local receive and transmit timestamps. The server SHOULD discard old
@@ -210,7 +215,7 @@
         same origin timestamp and the server responding in the interleaved mode
         with an incorrect transmit timestamp. If the timestamps are not
         guaranteed to be monotonically increasing, the server SHOULD check that
-        the transmit and receive timestamp is not already saved as a receive
+        the transmit and receive timestamps are not already saved as a receive
         timestamp of a previous request (from the same IP address if the server
         separates timestamps by addresses), and generate a new timestamp if
         necessary.</t>
@@ -305,7 +310,7 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
       </list></t>
 
       <t>The client SHOULD NOT update its NTP state when an invalid response is
-        received to not lose the timestamps which will be needed to complete a
+        received, to not lose the timestamps which will be needed to complete a
         measurement when the subsequent response in the interleaved mode is
         received.</t>
 
@@ -356,24 +361,29 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         Such an optimization will delay the first interleaved response of the
         server to a client by one exchange.</t>
 
-      <t>A check for a non-zero origin timestamp works with clients that
-        implement <xref target="I-D.ietf-ntp-data-minimization">NTP data
-          minimization</xref>. To detect requests in the basic mode from
-        clients that do not implement the data minimization, the server can
+      <t>A check for a non-zero origin timestamp works with SNTP clients that
+        always set the timestamp to zero and clients that implement <xref
+        target="I-D.ietf-ntp-data-minimization">NTP data minimization</xref>.
+        From the server's point of view, such clients start a new association
+        with each request.</t>
+
+      <t>To avoid searching the saved receive timestamps for non-zero origin
+        timestamps from requests conforming to the basic mode, the server can
         encode in low-order bits of the receive and transmit timestamps below
-        precision of the clock a bit indicating whether the timestamp is a
+        precision of the clock a flag indicating whether the timestamp is a
         receive timestamp. If the server receives a request with a non-zero
         origin timestamp which does not indicate it is a receive timestamp of
-        the server, the request is in the basic mode and it is not necessary to
+        the server, the request does not conform to the interleaved mode and
+        it is not necessary to perform the search and/or
         save the new receive and transmit timestamp.</t>
     </section>
 
     <section title="Interleaved Symmetric mode">
       <t>The interleaved symmetric mode uses the same principles as the
         interleaved client/server mode. A packet in the interleaved symmetric
-        mode has a transmit timestamp which corresponds to the previous packet
-        sent to the peer and an origin timestamp equal to the receive timestamp
-        from the last packet received from the peer.</t>
+        mode has a transmit timestamp which corresponds to the transmission of
+        the previous packet sent to the peer and an origin timestamp equal to
+        the receive timestamp from the last packet received from the peer.</t>
 
       <t>To enable synchronization in both directions of a symmetric
         association, both peers need to support the interleaved mode. For this
@@ -410,14 +420,20 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
             only response to a packet received from the peer B.</t>
       </list></t>
 
+      <t>The first condition is needed for compatibility with implementations
+        that do not support or are not configured for the interleaved mode. The
+        other conditions prevent a missing response from causing a mismatch
+        between the remote transmit (T2) and local receive timestamp (T3),
+        which would cause a large error in the measured offset and delay.</t>
+
       <t>An example of packets exchanged in a symmetric association is shown in
         Figure <xref format="counter" target="peer-exchange"/>. The
         minimum polling interval of the peer A is twice as long as the maximum
         polling interval of the peer B. The first packets sent by the peers are
         in the basic mode. The second and third packet sent by the peer A is in
         the interleaved mode. The second packet sent by the peer B is in the
-        interleaved mode, but the following packets sent by the peer are in the
-        basic mode, because multiple responses are sent per request.</t>
+        interleaved mode, but the following packets sent by the peer B are in
+        the basic mode, because multiple responses are sent per request.</t>
 
       <figure align="center" anchor="peer-exchange"
           title="Packet timestamps in interleaved symmetric mode">
@@ -491,7 +507,8 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         The client SHOULD also compare the origin timestamp with the transmit
         timestamp from the previous packet to detect lost packets. If the
         difference is larger than a specified maximum (e.g. 1 second), the
-        packet SHOULD NOT be used for synchronization.</t>
+        packet SHOULD NOT be used for synchronization in the interleaved
+        mode.</t>
 
       <t>The client SHOULD compute the offset using the origin timestamp from
         the received packet and the local receive timestamp of the previous
