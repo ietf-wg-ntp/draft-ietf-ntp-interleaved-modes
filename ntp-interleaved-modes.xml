@@ -560,9 +560,13 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         receive and transmit timestamps, as recommended for the transmit
         timestamp in the <xref target="I-D.ietf-ntp-data-minimization">NTP
           client data minimization</xref>, to make it more difficult for
-        off-path attackers to guess the origin timestamp. It is not possible to
-        zero the origin timestamp to prevent passive observers from easily
-        tracking clients moving between different networks.</t>
+        off-path attackers to guess the origin timestamp in the server
+        response.</t>
+
+      <t>The client data minimization cannot be fully implemented in the
+        interleaved mode. The origin timestamp cannot be zeroed out, which
+        makes the clients more vulnerable to tracking as they move between
+        networks.</t>
 
       <t>Attackers can force the server to drop its timestamps in order to
         prevent clients from getting an interleaved response. They can send a
@@ -573,11 +577,16 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
 
       <t>Protecting symmetric associations in the interleaved mode against
         replay attacks is even more difficult than in the basic mode.
-        The NTP state needs to be protected not only between the reception and
-        transmission in order to send the peer a packet with a valid origin
-        timestamp, but all the time to not lose the timestamps which will be
-        needed to complete a measurement when the following packet in the
-        interleaved mode is received.</t>
+        In both modes, the NTP state needs to be protected between the
+        reception of the last non-replayed response and transmission of the
+        next request in order for the request to contain the origin timestamp
+        expected by the peer. The difference is in the timestamps needed to
+        complete a measurement. In the basic mode only one valid response is
+        needed at a time and it is used as soon as it is received, but the
+        interleaved mode needs two consecutive valid responses. The NTP state
+        needs to be protected all the time to not lose the timestamps which
+        are needed to complete the measurement when the second response is
+        received.</t>
     </section>
   </middle>
 
