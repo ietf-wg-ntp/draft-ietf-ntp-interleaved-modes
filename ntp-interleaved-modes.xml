@@ -524,25 +524,6 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         the interleaved client/server mode.</t>
     </section>
 
-    <section anchor="Acknowledgements" title="Acknowledgements">
-      <t>The interleaved modes described in this document are based on the
-        implementation written by David Mills in the <eref
-          target="http://www.ntp.org">NTP project</eref>. The specification of
-        the broadcast mode is based purely on this implementation. The
-        specification of the symmetric mode has some modifications. The
-        client/server mode is specified as a new mode compatible with the
-        symmetric mode, similarly to the basic symmetric and client/server
-        modes.</t>
-
-      <t>The authors would like to thank Theresa Enghardt, Daniel Franke, Erik
-        Kline, Tal Mizrahi, Steven Sommars, Harlan Stenn, and Kristof Teichel
-        for their useful comments.</t>
-    </section>
-
-    <section anchor="IANA" title="IANA Considerations">
-      <t>This memo includes no request to IANA.</t>
-    </section>
-
     <section anchor="Security" title="Security Considerations">
       <t>The security considerations of time protocols in general are discussed
         in <xref target="RFC7384">RFC 7384</xref>, and specifically the
@@ -587,6 +568,25 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         needs to be protected all the time to not lose the timestamps which
         are needed to complete the measurement when the second response is
         received.</t>
+    </section>
+
+    <section anchor="IANA" title="IANA Considerations">
+      <t>This memo includes no request to IANA.</t>
+    </section>
+
+    <section anchor="Acknowledgements" title="Acknowledgements">
+      <t>The interleaved modes described in this document are based on the
+        implementation written by David Mills in the <eref
+          target="http://www.ntp.org">NTP project</eref>. The specification of
+        the broadcast mode is based purely on this implementation. The
+        specification of the symmetric mode has some modifications. The
+        client/server mode is specified as a new mode compatible with the
+        symmetric mode, similarly to the basic symmetric and client/server
+        modes.</t>
+
+      <t>The authors would like to thank Theresa Enghardt, Daniel Franke, Erik
+        Kline, Tal Mizrahi, Steven Sommars, Harlan Stenn, and Kristof Teichel
+        for their useful comments.</t>
     </section>
   </middle>
 
