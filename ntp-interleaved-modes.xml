@@ -524,6 +524,72 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         the interleaved client/server mode.</t>
     </section>
 
+    <section title="Protocol Failures">
+      <t>An incorrect client implementation of the basic mode (RFC 5905) can
+        work reliably with servers that implement only the basic mode, but the
+        protocol can fail intermittently with servers that implement the
+        interleaved mode.</t>
+
+      <t>If the client sets the origin timestamp to other values than the
+        transmit timestamp from the last valid server response, or zero, the
+        origin timestamp can match a receive timestamp of a previous server
+        response (possibly to a different client), causing an unexpected
+        interleaved response. The client is expected to drop the response as
+        bogus. If it did not check for bogus packets, it would be vulnerable to
+        off-path attacks.</t>
+
+      <t>If the client set the origin timestamp to a constant non-zero value,
+        this mismatch would be expected to happen once per the NTP era (about
+        136 years) if the NTP server was responding at the maximum rate needed
+        to go through all timestamp values (about 2 billion responses per
+        second). With lower rates of requests the chance of hitting a server
+        timestamp decreases proportionally.</t>
+
+      <t>The worst case of this failure would be a client that specifically sets
+        the origin timestamp to the server's receive timestamp, i.e. the client
+        accidentally implemented the interleaved mode, but it does not accept
+        interleaved responses. This client would still be able to synchronize
+        its clock. It would drop interleaved responses as bogus and set the
+        origin timestamp to the receive timestamp from the last valid response
+        in the basic mode. As servers are required to not respond twice to the
+        same origin timestamp in the interleaved mode, at least every other
+        response would be in the basic mode and accepted by the client.</t>
+
+      <t>Intermittent protocol failures can be caused also by an incorrect
+        server implementation of the interleaved mode. A server which does not
+        ensure the receive and transmit timestamps in its responses are unique
+        in a sufficiently long interval can misinterpret requests formed
+        correctly in the basic mode as interleaved and respond in the
+        interleaved mode. The response would be dropped by the client as
+        bogus.</t>
+
+      <t>A duplicated server receive timestamp can cause an expected
+        interleaved response to contain a transmit timestamp which does not
+        correspond to the transmission of the previous response from which the
+        client copied the receive timestamp to the origin timestamp in the
+        request, but a different response which contained the same receive
+        timestamp. The response would be accepted by the client with a small
+        error in the transmit timestamp equal to the difference between the
+        transmit timestamps of the two different responses. As the two requests
+        to which the responses responded were received at the same time
+        (according to the server's clock), the two transmissions would be
+        expected to be close to each other and the difference between them
+        would be comparable to the error a basic response normally has in its
+        transmit timestamp.</t>
+
+      <t>One reason for a duplicated server timestamp can be a large backward
+        step of the server's clock. If the timestamps the server has saved do
+        not fully cover the second pass of the clock over the repeated
+        interval, two requests received in different passes of the clock can
+        get the same receive timestamp. The client which made the first request
+        can get the transmit timestamp corresponding to the transmission of the
+        second response. From the server's point of view, the error of the
+        transmit timestamp would be still small, but from the client's point of
+        view the server already failed when it made the step as it was serving
+        wrong time before or after the step with a much larger error than the
+        error caused by the protocol failure.</t>
+    </section>
+
     <section anchor="Security" title="Security Considerations">
       <t>The security considerations of time protocols in general are discussed
         in <xref target="RFC7384">RFC 7384</xref>, and specifically the
