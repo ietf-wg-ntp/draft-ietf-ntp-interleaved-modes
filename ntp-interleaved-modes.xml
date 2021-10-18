@@ -650,9 +650,9 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         symmetric mode, similarly to the basic symmetric and client/server
         modes.</t>
 
-      <t>The authors would like to thank Theresa Enghardt, Daniel Franke, Erik
-        Kline, Tal Mizrahi, Steven Sommars, Harlan Stenn, and Kristof Teichel
-        for their useful comments.</t>
+      <t>The authors would like to thank Theresa Enghardt, Daniel Franke,
+        Benjamin Kaduk, Erik Kline, Tal Mizrahi, Steven Sommars, Harlan Stenn,
+        and Kristof Teichel for their useful comments.</t>
     </section>
   </middle>
 
