@@ -95,7 +95,8 @@
       </list></t>
 
       <t>Software timestamps captured in user space in the NTP
-        implementation itself are least accurate. They do not include
+        implementation itself are least accurate. They do not account for
+        delays due to
         system calls used for sending and receiving packets, processing and
         queuing delays in the system, network device drivers, and hardware.
         Hardware timestamps captured at the physical layer are most
