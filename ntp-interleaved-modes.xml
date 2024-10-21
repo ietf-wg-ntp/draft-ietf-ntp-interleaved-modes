@@ -370,7 +370,7 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         Such an optimization will delay the first interleaved response of the
         server to a client by one exchange.</t>
 
-      <t>A check for a non-zero origin timestamp works with SNTP clients that
+      <t>A check for a non-zero origin timestamp works with NTP clients that
         always set the timestamp to zero and clients that implement <xref
         target="I-D.ietf-ntp-data-minimization">NTP data minimization</xref>.
         From the server's point of view, such clients start a new association
