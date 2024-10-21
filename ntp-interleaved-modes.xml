@@ -6,7 +6,6 @@
 <!ENTITY RFC5906 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.5906.xml">
 <!ENTITY RFC7384 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.7384.xml">
 <!ENTITY RFC9109 SYSTEM "http://xml.resource.org/public/rfc/bibxml/reference.RFC.9109.xml">
-<!ENTITY DATAMIN SYSTEM "https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.ietf-ntp-data-minimization.xml">
 ]>
 <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 <?rfc strict="yes"?>
@@ -371,10 +370,8 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         server to a client by one exchange.</t>
 
       <t>A check for a non-zero origin timestamp works with NTP clients that
-        always set the timestamp to zero and clients that implement <xref
-        target="I-D.ietf-ntp-data-minimization">NTP data minimization</xref>.
-        From the server's point of view, such clients start a new association
-        with each request.</t>
+        always set the timestamp to zero. From the server's point of view, such
+        clients start a new association with each request.</t>
 
       <t>To avoid searching the saved receive timestamps for non-zero origin
         timestamps from requests conforming to the basic mode, the server can
@@ -604,17 +601,15 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         prevent off-path attackers from easily getting the origin timestamp
         needed to make a valid response in the interleaved mode.</t>
 
-      <t>Clients using the interleaved mode SHOULD randomize all bits of both
-        receive and transmit timestamps, as recommended for the transmit
-        timestamp in the <xref target="I-D.ietf-ntp-data-minimization">NTP
-          client data minimization</xref>, to make it more difficult for
-        off-path attackers to guess the origin timestamp in the server
-        response.</t>
+      <t>Clients using the interleaved mode SHOULD randomize all bits of
+        receive and transmit timestamps in their requests (i.e. use a precision
+        of 32) to make it more difficult for off-path attackers to guess the
+        origin timestamp in the server response.</t>
 
-      <t>The client data minimization cannot be fully implemented in the
-        interleaved mode. The origin timestamp cannot be zeroed out, which
-        makes the clients more vulnerable to tracking as they move between
-        networks.</t>
+      <t>Unlike in the basic client/server mode, clients using interleaved mode
+        cannot set the origin timestamp in their requests to zero (i.e. reset
+        the NTP association with every request) to make it more difficult to
+        track them as they move between networks.</t>
 
       <t>Attackers can force the server to drop its timestamps in order to
         prevent clients from getting an interleaved response. They can send a
@@ -664,8 +659,6 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
       &RFC8174;
 
       &RFC5905;
-
-      &DATAMIN;
     </references>
 
     <references title="Informative References">
