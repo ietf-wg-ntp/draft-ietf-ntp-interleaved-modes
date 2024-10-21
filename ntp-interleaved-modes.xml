@@ -227,10 +227,11 @@
         the transmit and receive timestamps are not already saved as a receive
         timestamp of a previous request (from the same IP address if the server
         separates timestamps by addresses), and generate a new timestamp if
-        necessary.</t>
+        necessary, to prevent an incorrect interleaved response later.</t>
 
-      <t>When the server receives a request from a client, it SHOULD respond
-        in the interleaved mode if the following conditions are met:</t>
+      <t>When the server receives a request from a client, it MUST NOT respond
+        in the interleaved mode unless the following two conditions are
+        met:</t>
 
       <t><list style="numbers">
           <t>The request does not have a receive timestamp equal to the transmit
@@ -243,15 +244,16 @@
 
       <t>A response in the interleaved mode MUST contain the transmit timestamp
         of the response which contained the receive timestamp matching the
-        origin timestamp from the request. The server SHOULD drop the timestamps
+        origin timestamp from the request. The server can drop the timestamps
         after sending the response. The receive timestamp MUST NOT be used
         again to detect a request conforming to the interleaved mode.</t>
 
       <t>If the conditions are not met (i.e. the request is not detected to
         conform to the interleaved mode), the server MUST NOT respond in the
-        interleaved mode. The server MAY always respond in the basic mode. In
+        interleaved mode. If it responds, it MUST be in the basic mode. In
         any case, the server SHOULD save the new receive and transmit
-        timestamps.</t>
+        timestamps to be able to respond in the interleaved mode to the
+        next request from the client.</t>
 
       <t>The first request from a client is always in the basic mode and so is
         the server response. It has a zero origin timestamp and zero receive
@@ -306,12 +308,12 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         interleaved mode:</t>
 
       <t><list style="numbers">
-          <t>The check for duplicate packets SHOULD compare both receive and
+          <t>The check for duplicate packets compares both receive and
             transmit timestamps in order to not drop a valid response in the
             interleaved mode if it follows a response in the basic mode and
             they contain the same transmit timestamp.</t>
 
-          <t>The check for bogus packets SHOULD compare the origin timestamp
+          <t>The check for bogus packets compares the origin timestamp
             with both transmit and receive timestamps from the request. If the
             origin timestamp is equal to the transmit timestamp, the response
             is in the basic mode. If the origin timestamp is equal to the
@@ -411,8 +413,8 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         (re)initialization of the association, but they do not change the
         selection of the mode.</t>
 
-      <t>A peer A SHOULD send a peer B a packet in the interleaved mode only
-        when all of the following conditions are met:</t>
+      <t>A peer A MUST NOT send a peer B a packet in the interleaved mode unless
+        all of the following conditions are met:</t>
 
       <t><list style="numbers">
           <t>The peer A has an active association with the peer B which was
@@ -464,14 +466,13 @@ Tx  | t1~| | t3~| | t1 |    | t7~| | t3 | |t11~|    |t13~| | t9 |
       <t>If the peer A has no association with the peer B and it responds with
         symmetric passive packets, it does not need to count the packets in
         order to meet the restrictions, because each request has at most one
-        response. The peer SHOULD process the requests in the same way as a
-        server which supports the interleaved client/server mode. It MUST NOT
-        respond in the interleaved mode if the request was not in the
-        interleaved mode.</t>
+        response. The processing of the requests can be implemented in the same
+        way as a server handling requests in the interleaved client/server
+        mode.</t>
 
-      <t>The peers SHOULD compute the offset and delay using one of the two sets
-        of timestamps specified in the client/server section. They MAY switch
-        between them to minimize the interval between T1 and T4 in order to
+      <t>The peers can compute the offset and delay using one of the two sets
+        of timestamps specified in the client/server section. They can switch
+        between the sets to minimize the interval between T1 and T4 in order to
         reduce the error in the measured delay.</t>
     </section>
 
@@ -509,18 +510,22 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         origin timestamp and processes all packets as if they were in the basic
         mode.</t>
 
-      <t>A client which supports the interleaved mode SHOULD check if the
-        origin timestamp is not zero to detect packets in the interleaved mode.
+      <t>A client which supports the interleaved mode MUST check if the origin
+        timestamp is not zero to detect packets conforming to the interleaved
+        mode.
         The client SHOULD also compare the origin timestamp with the transmit
         timestamp from the previous packet to detect lost packets. If the
         difference is larger than a specified maximum (e.g. 1 second), the
         packet SHOULD NOT be used for synchronization in the interleaved
-        mode.</t>
+        mode to avoid a large error in the measurement.</t>
 
-      <t>The client SHOULD compute the offset using the origin timestamp from
+      <t>The client computes the offset using the origin timestamp from
         the received packet and the local receive timestamp of the previous
         packet. If the client needs to measure the network delay, it SHOULD use
-        the interleaved client/server mode.</t>
+        the interleaved client/server mode. If it used the basic client/server
+        or symmetric mode, the less accurate measurement of the delay would
+        impact also accuracy of the offset measured in the interleaved
+        broadcast mode.</t>
     </section>
 
     <section title="Protocol Failures">
@@ -616,7 +621,7 @@ Tx            | t1~|       | t3~|       | t5~|       | t7~|
         prevent clients from getting an interleaved response. They can send a
         large number of requests, send requests with a spoofed source address,
         or replay an authenticated request if the interleaved mode is enabled
-        only for authenticated clients. Clients SHOULD NOT rely on servers to
+        only for authenticated clients. Clients MUST NOT rely on servers to
         be able to respond in the interleaved mode.</t>
 
       <t>Protecting symmetric associations in the interleaved mode against
