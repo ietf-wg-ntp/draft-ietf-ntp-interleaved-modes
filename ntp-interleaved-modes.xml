@@ -171,7 +171,7 @@
       </section>
     </section>
 
-    <section title="Interleaved Client/server mode">
+    <section title="Interleaved Client/Server Mode">
       <t>The interleaved client/server mode is similar to the basic client/
         server mode. The difference between the two modes is in the values
         saved to the origin and transmit timestamp fields.</t>
@@ -387,7 +387,7 @@ Tx  | t1~|    | t3~|      | t1 |    | t3 |      | t5 |    |t11~|
         save the new receive and transmit timestamp.</t>
     </section>
 
-    <section title="Interleaved Symmetric mode">
+    <section title="Interleaved Symmetric Mode">
       <t>The interleaved symmetric mode uses the same principles as the
         interleaved client/server mode. A packet in the interleaved symmetric
         mode has a transmit timestamp which corresponds to the transmission of
@@ -476,7 +476,7 @@ Tx  | t1~| | t3~| | t1 |    | t7~| | t3 | |t11~|    |t13~| | t9 |
         reduce the error in the measured delay.</t>
     </section>
 
-    <section title="Interleaved Broadcast mode">
+    <section title="Interleaved Broadcast Mode">
       <t>A packet in the interleaved broadcast mode contains two transmit
         timestamps. One corresponds to the packet itself and is saved in the
         transmit timestamp field. The other corresponds to the previous packet
